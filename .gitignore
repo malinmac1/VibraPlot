@@ -1,7 +1,2 @@
 #WebStorm project folder
 /.idea
-
-#Firebase files
-/.firebase
-firebase.json
-.firebaserc
