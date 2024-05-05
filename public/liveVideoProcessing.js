@@ -21,6 +21,11 @@ Module.onRuntimeInitialized = function () {
             canvas.width = video.width;
             canvas.height = video.height;
 
+            x1.value = 0;
+            x2.value = canvas.width;
+            y1.value = canvas.height;
+            y2.value = 0;
+
             let left = parseInt(x1.value);
             let right = parseInt(x2.value);
             let top = canvas.height - parseInt(y1.value);
