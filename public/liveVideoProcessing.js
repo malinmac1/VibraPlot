@@ -43,15 +43,12 @@ Module.onRuntimeInitialized = function () {
             }
             x2.onchange = function () {
                 right = parseInt(x2.value);
-
             }
             y1.onchange = function () {
                 top = canvas.height - parseInt(y1.value);
-
             }
             y2.onchange = function () {
                 bottom = canvas.height - parseInt(y2.value);
-
             }
 
             // take first frame of the video
@@ -59,43 +56,26 @@ Module.onRuntimeInitialized = function () {
             let frame = new cv.Mat(video.height, video.width, cv.CV_8UC4);
 
             // hardcode the initial location of window
-            let trackWindow = new cv.Rect(top, left, width, height);
+            let trackWindow = new cv.Rect(left, top, width, height);
             cap.read(frame);
 
             // set up the ROI for tracking
-            let  roi = frame.roi(trackWindow);
-            let hsvRoi = new cv.Mat();
-            let rgbRoi = new cv.Mat();
-            cv.cvtColor(roi, rgbRoi, cv.COLOR_RGBA2RGB);
-            cv.cvtColor(rgbRoi, hsvRoi, cv.COLOR_RGB2HSV);
-            let mask = new cv.Mat();
-            let lowScalar = new cv.Scalar(30, 30, 0);
-            let highScalar = new cv.Scalar(180, 180, 180);
-            let low = new cv.Mat(hsvRoi.rows, hsvRoi.cols, hsvRoi.type(), lowScalar);
-            let high = new cv.Mat(hsvRoi.rows, hsvRoi.cols, hsvRoi.type(), highScalar);
-            cv.inRange(hsvRoi, low, high, mask);
-            let roiHist = new cv.Mat();
-            let hsvRoiVec = new cv.MatVector();
-            hsvRoiVec.push_back(hsvRoi);
-            cv.calcHist(hsvRoiVec, [0], mask, roiHist, [180], [0, 180]);
-            cv.normalize(roiHist, roiHist, 0, 255, cv.NORM_MINMAX);
+            let roi;
+            let hsvRoi;
+            let rgbRoi;
+            let mask;
+            let lowScalar;
+            let highScalar;
+            let low;
+            let high;
+            let roiHist;
+            let hsvRoiVec;
 
-            // delete useless mats.
-            roi.delete();
-            rgbRoi.delete();
-            hsvRoi.delete();
-            mask.delete();
-            low.delete();
-            high.delete();
-            hsvRoiVec.delete();
+            let termCrit;
 
-            // Setup the termination criteria, either 10 iteration or move by at least 1 pt
-            let termCrit = new cv.TermCriteria(cv.TERM_CRITERIA_EPS | cv.TERM_CRITERIA_COUNT, 10, 1);
-
-            let hsv = new cv.Mat(video.height, video.width, cv.CV_8UC3);
-            let dst = new cv.Mat();
-            let hsvVec = new cv.MatVector();
-            hsvVec.push_back(hsv);
+            let hsv;
+            let dst;
+            let hsvVec;
 
             const FPS = 30;
 
@@ -107,12 +87,12 @@ Module.onRuntimeInitialized = function () {
                 frame = new cv.Mat(video.height, video.width, cv.CV_8UC4);
                 cap.read(frame);
                 // hardcode the initial location of window
-                trackWindow = new cv.Rect(top, left, width, height);
-                cv.rectangle(frame, new cv.Point(left, bottom), new cv.Point(right, top), [255, 0, 0, 255], 2);
+                trackWindow = new cv.Rect(left, top, width, height);
+                cv.rectangle(frame, new cv.Point(left, top), new cv.Point(right, bottom), [255, 0, 0, 255], 2);
                 cv.imshow('canvasOutput', frame);
                 width = right - left;
-                X = left + width/2;
                 height = bottom - top;
+                X = left + width/2;
                 Y = canvas.height - (top + height/2);
                 xValue.innerHTML = "X: " + X;
                 yValue.innerHTML = "Y: " + Y;
@@ -146,6 +126,10 @@ Module.onRuntimeInitialized = function () {
                     let [x, y, w, h] = [trackWindow.x, trackWindow.y, trackWindow.width, trackWindow.height];
                     cv.rectangle(frame, new cv.Point(x, y), new cv.Point(x + w, y + h), [255, 0, 0, 255], 2);
                     cv.imshow('canvasOutput', frame);
+                    x1.value = x;
+                    x2.value = x + w;
+                    y1.value = canvas.height - y;
+                    y2.value = canvas.height - (y + h);
                     X = x + w/2;
                     Y = canvas.height - (y + h/2);
                     xValue.innerHTML = "X: " + X;
@@ -162,6 +146,39 @@ Module.onRuntimeInitialized = function () {
                     start = true;
                     startButton.innerHTML = 'Stop';
                     clearInterval(initialLoopInterval);
+
+                    roi = frame.roi(trackWindow);
+                    hsvRoi = new cv.Mat();
+                    rgbRoi = new cv.Mat();
+                    cv.cvtColor(roi, rgbRoi, cv.COLOR_RGBA2RGB);
+                    cv.cvtColor(rgbRoi, hsvRoi, cv.COLOR_RGB2HSV);
+                    mask = new cv.Mat();
+                    lowScalar = new cv.Scalar(30, 30, 0);
+                    highScalar = new cv.Scalar(180, 180, 180);
+                    low = new cv.Mat(hsvRoi.rows, hsvRoi.cols, hsvRoi.type(), lowScalar);
+                    high = new cv.Mat(hsvRoi.rows, hsvRoi.cols, hsvRoi.type(), highScalar);
+                    cv.inRange(hsvRoi, low, high, mask);
+                    roiHist = new cv.Mat();
+                    hsvRoiVec = new cv.MatVector();
+                    hsvRoiVec.push_back(hsvRoi);
+                    cv.calcHist(hsvRoiVec, [0], mask, roiHist, [180], [0, 180]);
+                    cv.normalize(roiHist, roiHist, 0, 255, cv.NORM_MINMAX);
+
+                    roi.delete();
+                    rgbRoi.delete();
+                    hsvRoi.delete();
+                    mask.delete();
+                    low.delete();
+                    high.delete();
+                    hsvRoiVec.delete();
+
+                    termCrit = new cv.TermCriteria(cv.TERM_CRITERIA_EPS | cv.TERM_CRITERIA_COUNT, 10, 1);
+
+                    hsv = new cv.Mat(video.height, video.width, cv.CV_8UC3);
+                    dst = new cv.Mat();
+                    hsvVec = new cv.MatVector();
+                    hsvVec.push_back(hsv);
+
                     processVideoInterval = setInterval(processVideo, 1000/FPS);
                 } else {
                     start = false;
