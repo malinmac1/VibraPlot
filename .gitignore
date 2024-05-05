@@ -1,2 +1,5 @@
 #WebStorm project folder
 /.idea
+
+#Local copies of library files
+/public/lib/
