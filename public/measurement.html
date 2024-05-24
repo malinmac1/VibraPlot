@@ -30,13 +30,21 @@
 <main>
     <video id="videoInput" autoplay></video>
     <canvas id="canvasOutput"></canvas>
+    <label for="left">Left</label>
+    <input id="left" type="range">
+    <label for="width">Width</label>
+    <input id="width" type="range">
+    <label for="bottom">Bottom</label>
+    <input id="bottom" type="range">
+    <label for="height">Height</label>
+    <input id="height" type="range">
+    <label for="videoSelect">Select video input device</label>
+    <select id="videoSelect"></select>
+    <label for="frequency">Frequency</label>
+    <input id="frequency" type="number">
     <button id="startButton">Start</button>
-    <input id="x1" type="text">Left
-    <input id="x2" type="text">Right
-    <input id="y2" type="text">Bottom
-    <input id="y1" type="text">Top
-    <p id="yValue"></p>
-    <p id="xValue"></p>
+    <p id="X"></p>
+    <p id="Y"></p>
     <p>All values are from bottom left corner</p>
     <script src="https://docs.opencv.org/4.9.0/opencv.js" type="text/javascript"></script>
     <script src="video.js" type="text/javascript"></script>
