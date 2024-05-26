@@ -1,8 +1,13 @@
-//Starting script after OpenCV.js is loaded
+// Declaring x, y values for livePlotting.js
+let xValue = 0;
+let yValue = 0;
+let frequency = 0;
+
+// Starting script after OpenCV.js is loaded
 var Module;
 
 Module.onRuntimeInitialized = function () {
-
+    // Declaring boolean variables
     let streaming = false;
     let start = false;
 
@@ -12,16 +17,13 @@ Module.onRuntimeInitialized = function () {
             streaming = true;
 
             // Assigning HTML elements to variables
-            let video = document.getElementById('videoInput');
-            let canvas = document.getElementById('canvasOutput');
-            let startButton = document.getElementById('startButton');
-            let left = document.getElementById('left');
-            let width = document.getElementById('width');
-            let bottom = document.getElementById('bottom');
-            let height = document.getElementById('height');
-            let X = document.getElementById('X');
-            let Y = document.getElementById('Y');
-            let frequencySelect = document.getElementById('frequency');
+            const canvas = document.getElementById('canvasOutput');
+            const startButton = document.getElementById('startButton');
+            const left = document.getElementById('left');
+            const width = document.getElementById('width');
+            const bottom = document.getElementById('bottom');
+            const height = document.getElementById('height');
+            const frequencySelect = document.getElementById('frequency');
 
             // Setting up initial x, y values
             canvas.width = video.width;
@@ -34,40 +36,41 @@ Module.onRuntimeInitialized = function () {
             let widthValue = parseInt(width.value) / 100 * (canvas.width - leftValue);
             let bottomValue = canvas.height - (parseInt(bottom.value) / 100 * canvas.height);
             let heightValue = parseInt(height.value) / 100 * bottomValue;
-            let xValue = leftValue + widthValue/2;
-            let yValue = canvas.height - (bottomValue - heightValue/2);
-
-            X.innerHTML = "X: " + xValue;
-            Y.innerHTML = "Y: " + yValue;
+            let xValueInitial = leftValue + widthValue/2;
+            let yValueInitial = canvas.height - (bottomValue - heightValue/2);
 
             // Setting initial frequency
             frequencySelect.value = 30;
-            let frequency = parseInt(frequencySelect.value);
+            frequency = parseInt(frequencySelect.value);
 
             // Changing x, y values when input fields are changed
             left.onchange = function () {
                 leftValue = parseInt(left.value) / 100 * canvas.width;
                 widthValue = parseInt(width.value) / 100 * (canvas.width - leftValue);
-                xValue = leftValue + widthValue/2;
-                X.innerHTML = "X: " + xValue;
+                xValueInitial = leftValue + widthValue/2;
+                startButton.innerHTML = 'Start';
+                drawInitialPlots();
             }
             width.onchange = function () {
                 leftValue = parseInt(left.value) / 100 * canvas.width;
                 widthValue = parseInt(width.value) / 100 * (canvas.width - leftValue);
-                xValue = leftValue + widthValue/2;
-                X.innerHTML = "X: " + xValue;
+                xValueInitial = leftValue + widthValue/2;
+                startButton.innerHTML = 'Start';
+                drawInitialPlots();
             }
             bottom.onchange = function () {
                 bottomValue = canvas.height - (parseInt(bottom.value) / 100 * canvas.height);
                 heightValue = parseInt(height.value) / 100 * bottomValue;
-                yValue = canvas.height - (bottomValue - heightValue/2);
-                Y.innerHTML = "Y: " + yValue;
+                yValueInitial = canvas.height - (bottomValue - heightValue/2);
+                startButton.innerHTML = 'Start';
+                drawInitialPlots();
             }
             height.onchange = function () {
                 bottomValue = canvas.height - (parseInt(bottom.value) / 100 * canvas.height);
                 heightValue = parseInt(height.value) / 100 * bottomValue;
-                yValue = canvas.height - (bottomValue - heightValue/2);
-                Y.innerHTML = "Y: " + yValue;
+                yValueInitial = canvas.height - (bottomValue - heightValue/2);
+                startButton.innerHTML = 'Start';
+                drawInitialPlots();
             }
 
             // Capturing first frame of the video
@@ -99,9 +102,10 @@ Module.onRuntimeInitialized = function () {
                 frequency = parseInt(frequencySelect.value);
                 clearInterval(initialLoopInterval);
                 clearInterval(processVideoInterval);
-                initialLoopInterval = setInterval(initialLoop, 1000/frequency);
+                initialLoopInterval = setInterval(initialLoop, 1000 / frequency);
             }
 
+            // Declaring loop intervals
             let initialLoopInterval;
             let processVideoInterval;
 
@@ -118,7 +122,6 @@ Module.onRuntimeInitialized = function () {
 
             // Function to process video
             function processVideo() {
-                console.log('processVideo function is called.')
                 try {
                     // Checking if streaming is stopped
                     if (!streaming) {
@@ -151,21 +154,22 @@ Module.onRuntimeInitialized = function () {
                     height.value = h / (y + h) * 100;
                     leftValue = x;
                     bottomValue = y + h;
-                    xValue = x + w/2;
-                    yValue = canvas.height - (y + h/2);
-                    X.innerHTML = "X: " + xValue;
-                    Y.innerHTML = "Y: " + yValue;
+                    xValue = (x + w/2) - xValueInitial;
+                    yValue = (canvas.height - (y + h/2)) - yValueInitial;
                 } catch (err) {
                     console.error(err);
                 }
             }
 
             // Starting initial loop
-            initialLoopInterval = setInterval(initialLoop, 1000/frequency);
+            initialLoopInterval = setInterval(initialLoop, 1000 / frequency);
 
-            // Starting or stopping tracking
+            // Dispatching event to load livePlotting.js
+            document.getElementById('canvasOutput').dispatchEvent(new Event('loadeddata'));
+
+            // Starting or stopping tracking and plotting
             startButton.onclick = function () {
-                if (start === false) {
+                if (!start) {
                     // Stopping initial loop
                     start = true;
                     startButton.innerHTML = 'Stop';
@@ -202,15 +206,21 @@ Module.onRuntimeInitialized = function () {
                     hsvVec.push_back(hsv);
 
                     // Starting processing loop
-                    processVideoInterval = setInterval(processVideo, 1000/frequency);
+                    processVideoInterval = setInterval(processVideo, 1000 / frequency);
+
+                    // Starting plotting loops
+                    plotInterval = setInterval(drawPlots, 1000 / frequency);
                 } else {
                     // Stopping processing loop
                     start = false;
-                    startButton.innerHTML = 'Start';
+                    startButton.innerHTML = 'Resume';
                     clearInterval(processVideoInterval);
 
                     // Starting initial loop
-                    initialLoopInterval = setInterval(initialLoop, 1000/frequency);
+                    initialLoopInterval = setInterval(initialLoop, 1000 / frequency);
+
+                    // Stopping plotting loops
+                    clearInterval(plotInterval);
                 }
             }
         });

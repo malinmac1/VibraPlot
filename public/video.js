@@ -1,6 +1,6 @@
 // Assigning HTML elements to variables
-const video = document.querySelector('#videoInput');
-const videoSelect = document.querySelector('#videoSelect');
+const video = document.getElementById('videoInput');
+const videoSelect = document.getElementById('videoSelect');
 
 // Getting all video devices
 navigator.mediaDevices.enumerateDevices()
@@ -20,7 +20,7 @@ function getVideo(deviceId) {
         .then(stream => {
             video.srcObject = stream;
             video.onloadedmetadata = (event) => {
-                video.width = visualViewport.width / 5;
+                video.width = visualViewport.width / 3;
                 video.height = video.width * (video.videoHeight / video.videoWidth);
                 video.play();
             };
