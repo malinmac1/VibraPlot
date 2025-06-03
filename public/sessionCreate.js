@@ -14,8 +14,15 @@ if (!signedIn) {
     console.log("User is not signed in, signing in anonymously...");
     signInAnonymously(auth)
         .then(() => {
-            const uid = user.uid;
-            console.log("User anonymously signed in with UID:", uid);
+            // Signed in successfully, checking uid again
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // User is signed in
+                    const uid = user.uid;
+                    console.log("User is already signed in with UID:", uid);
+                    signedIn = true;
+                }
+            });
         })
         .catch((error) => {
             const errorCode = error.code;
