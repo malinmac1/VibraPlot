@@ -8,8 +8,6 @@ onAuthStateChanged(auth, (user) => {
         const uid = user.uid;
         console.log("User is already signed in with UID:", uid);
         signedIn = true;
-    } else {
-        // User is signed out
     }
 });
 if (!signedIn) {
