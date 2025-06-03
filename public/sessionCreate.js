@@ -5,10 +5,14 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
         // User is signed in
         const uid = user.uid;
-        console.log("User is signed in with UID:", uid);
+        console.log("User is already signed in with UID:", uid);
     } else {
         // User is signed out
         signInAnonymously(auth)
+            .then(() => {
+                const uid = user.uid;
+                console.log("User anonymously signed in with UID:", uid);
+            })
             .catch((error) => {
                 const errorCode = error.code;
                 const errorMessage = error.message;
