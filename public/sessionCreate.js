@@ -1,4 +1,10 @@
 import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirebaseConfig } from "./firebaseConfig.js";
+
+// Initializing Firebase app
+const firebaseConfig = getFirebaseConfig();
+initializeApp(firebaseConfig);
 
 console.log("Initializing Firebase Auth...");
 const auth = getAuth();
