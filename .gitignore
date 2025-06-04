@@ -3,3 +3,9 @@
 
 #Local copies of library files
 /public/lib/
+
+#Cloud Functions
+/functions/
+
+#Node.js dependencies
+/node_modules/

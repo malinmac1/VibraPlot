@@ -44,34 +44,26 @@ Module.onRuntimeInitialized = function () {
             frequency = parseInt(frequencySelect.value);
 
             // Changing x, y values when input fields are changed
-            left.onchange = function () {
+            function widthChange() {
                 leftValue = parseInt(left.value) / 100 * canvas.width;
                 widthValue = parseInt(width.value) / 100 * (canvas.width - leftValue);
                 xValueInitial = leftValue + widthValue/2;
                 startButton.innerHTML = 'Start';
                 drawInitialPlots();
             }
-            width.onchange = function () {
-                leftValue = parseInt(left.value) / 100 * canvas.width;
-                widthValue = parseInt(width.value) / 100 * (canvas.width - leftValue);
-                xValueInitial = leftValue + widthValue/2;
-                startButton.innerHTML = 'Start';
-                drawInitialPlots();
-            }
-            bottom.onchange = function () {
+
+            function heightChange() {
                 bottomValue = canvas.height - (parseInt(bottom.value) / 100 * canvas.height);
                 heightValue = parseInt(height.value) / 100 * bottomValue;
                 yValueInitial = canvas.height - (bottomValue - heightValue/2);
                 startButton.innerHTML = 'Start';
                 drawInitialPlots();
-            }
-            height.onchange = function () {
-                bottomValue = canvas.height - (parseInt(bottom.value) / 100 * canvas.height);
-                heightValue = parseInt(height.value) / 100 * bottomValue;
-                yValueInitial = canvas.height - (bottomValue - heightValue/2);
-                startButton.innerHTML = 'Start';
-                drawInitialPlots();
-            }
+
+            left.onchange = widthChange;
+            width.onchange = widthChange;
+
+            bottom.onchange = heightChange;
+            height.onchange = heightChange;
 
             // Capturing first frame of the video
             let cap = new cv.VideoCapture(video);

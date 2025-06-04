@@ -24,6 +24,10 @@ onAuthStateChanged(auth, (user) => {
                     // User is signed in
                     const uid = user.uid;
                     console.log("User signed in with UID:", uid);
+
+                    // Send uid to Cloud Functions for management
+                    fetch('https://us-central1-vibraplot.cloudfunctions.net/schedule?uid=' + uid)
+                    console.log("UID sent to Cloud Functions for management:", uid);
                 });
             })
             .catch((error) => {
