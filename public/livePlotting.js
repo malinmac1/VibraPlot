@@ -3,8 +3,10 @@ const divValues = document.getElementById('plotValues');
 const divAccelerations = document.getElementById('plotAccelerations');
 
 // Declaring x,y and time variables
+let xDisplacement = 0;
 let xValueOld = 0;
 let xAcceleration = 0;
+let yDisplacement = 0;
 let yValueOld = 0;
 let yAcceleration = 0;
 let time = 0;
@@ -12,17 +14,10 @@ let time = 0;
 // Functions for drawing initial plots
 function drawInitialPlots() {
 
-    // Assigning initial x,y and time values
-    xValueOld = 0;
-    xAcceleration = 0;
-    yValueOld = 0;
-    yAcceleration = 0;
-    time = 0;
-
     // Declaring plotting variables
     let xValueTrace = {
         x: [time],
-        y: [xValue],
+        y: [xDisplacement],
         mode: 'lines',
         name: 'X Displacement'
     };
@@ -34,7 +29,7 @@ function drawInitialPlots() {
     };
     let yValueTrace = {
         x: [time],
-        y: [yValue],
+        y: [yDisplacement],
         mode: 'lines',
         name: 'Y Displacement'
     };
@@ -69,15 +64,17 @@ let plotInterval;
 function drawPlots() {
     // Updating x, y and time values
     xAcceleration = (xValue - xValueOld) * frequency * frequency;
+    xDisplacement = xValue - xValueOld;
     xValueOld = xValue;
     yAcceleration = (yValue - yValueOld) * frequency * frequency;
+    yDisplacement = yValue - yValueOld;
     yValueOld = yValue;
     time += (1000 / frequency);
 
     // Declaring trace updates
     let xValueTraceUpdate = {
         x: [[time]],
-        y: [[xValue]]
+        y: [[xDisplacement]]
     };
     let xAccelerationTraceUpdate = {
         x: [[time]],
@@ -85,7 +82,7 @@ function drawPlots() {
     };
     let yValueTraceUpdate = {
         x: [[time]],
-        y: [[yValue]]
+        y: [[yDisplacement]]
     };
     let yAccelerationTraceUpdate = {
         x: [[time]],

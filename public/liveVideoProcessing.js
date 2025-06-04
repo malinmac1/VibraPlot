@@ -3,13 +3,20 @@ let xValue = 0;
 let yValue = 0;
 let frequency = 0;
 
+// Setting up starting for databaseSync.js
+const startButton = document.getElementById('startButton');
+let start = false;
+
+// Declaring a button
+let next = document.createElement('button');
+next.innerText = "Next";
+
 // Starting script after OpenCV.js is loaded
 var Module;
 
 Module.onRuntimeInitialized = function () {
-    // Declaring boolean variables
+    // Declaring boolean variable
     let streaming = false;
-    let start = false;
 
     // Starting processing after video is loaded
     video.addEventListener('loadeddata', (event) => {
@@ -18,7 +25,6 @@ Module.onRuntimeInitialized = function () {
 
             // Assigning HTML elements to variables
             const canvas = document.getElementById('canvasOutput');
-            const startButton = document.getElementById('startButton');
             const left = document.getElementById('left');
             const width = document.getElementById('width');
             const bottom = document.getElementById('bottom');
@@ -38,6 +44,8 @@ Module.onRuntimeInitialized = function () {
             let heightValue = parseInt(height.value) / 100 * bottomValue;
             let xValueInitial = leftValue + widthValue/2;
             let yValueInitial = canvas.height - (bottomValue - heightValue/2);
+            xValue = xValueInitial;
+            yValue = yValueInitial;
 
             // Setting initial frequency
             frequencySelect.value = 30;
@@ -55,9 +63,10 @@ Module.onRuntimeInitialized = function () {
             function heightChange() {
                 bottomValue = canvas.height - (parseInt(bottom.value) / 100 * canvas.height);
                 heightValue = parseInt(height.value) / 100 * bottomValue;
-                yValueInitial = canvas.height - (bottomValue - heightValue/2);
+                yValueInitial = canvas.height - (bottomValue - heightValue / 2);
                 startButton.innerHTML = 'Start';
                 drawInitialPlots();
+            }
 
             left.onchange = widthChange;
             width.onchange = widthChange;
@@ -156,12 +165,13 @@ Module.onRuntimeInitialized = function () {
             // Starting initial loop
             initialLoopInterval = setInterval(initialLoop, 1000 / frequency);
 
-            // Dispatching event to load livePlotting.js
+            // Dispatching events to load livePlotting.js and databaseSync.js
             document.getElementById('canvasOutput').dispatchEvent(new Event('loadeddata'));
 
             // Starting or stopping tracking and plotting
             startButton.onclick = function () {
                 if (!start) {
+
                     // Stopping initial loop
                     start = true;
                     startButton.innerHTML = 'Stop';
@@ -202,7 +212,11 @@ Module.onRuntimeInitialized = function () {
 
                     // Starting plotting loops
                     plotInterval = setInterval(drawPlots, 1000 / frequency);
+
+                    // Starting database sync
+                    document.dispatchEvent(new Event('measurementStarted'));
                 } else {
+
                     // Stopping processing loop
                     start = false;
                     startButton.innerHTML = 'Resume';
@@ -213,6 +227,18 @@ Module.onRuntimeInitialized = function () {
 
                     // Stopping plotting loops
                     clearInterval(plotInterval);
+
+                    // Stopping database sync
+                    document.dispatchEvent(new Event('measurementStopped'));
+
+                    // Spawning button
+                    const main = document.getElementById('main');
+                    main.appendChild(next);
+
+                    // Proceeding to the next step
+                    next.addEventListener('click', () => {
+                        window.location.href = 'results.html';
+                    })
                 }
             }
         });

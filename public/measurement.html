@@ -27,7 +27,7 @@
             </a>
     </ul>
 </header>
-<main>
+<main id="main">
     <video id="videoInput" autoplay></video>
     <canvas id="canvasOutput"></canvas>
     <div id="plotValues"></div>
@@ -48,9 +48,11 @@
     <p>All values are from bottom left corner</p>
     <script src="https://docs.opencv.org/4.9.0/opencv.js" type="text/javascript"></script>
     <script src="https://cdn.plot.ly/plotly-2.32.0.min.js" charset="utf-8"></script>
+    <script src="firebaseConfig.js" type="module"></script>
     <script src="video.js" type="text/javascript"></script>
     <script src="liveVideoProcessing.js" type="text/javascript"></script>
     <script src="livePlotting.js" type="text/javascript" defer></script>
+    <script src="databaseSync.js" type="module"></script>
 </main>
 </body>
 </html>
