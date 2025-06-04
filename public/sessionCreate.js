@@ -1,4 +1,4 @@
-import { getAuth, onAuthStateChanged, signInAnonymously } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 console.log("Initializing Firebase Auth...");
 const auth = getAuth();
