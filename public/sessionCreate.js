@@ -1,5 +1,6 @@
 import { getAuth, onAuthStateChanged, signInAnonymously } from "firebase/auth";
 
+console.log("Initializing Firebase Auth...");
 const auth = getAuth();
 let signedIn = false;
 onAuthStateChanged(auth, (user) => {
@@ -19,7 +20,7 @@ if (!signedIn) {
                 if (user) {
                     // User is signed in
                     const uid = user.uid;
-                    console.log("User is already signed in with UID:", uid);
+                    console.log("User signed in with UID:", uid);
                     signedIn = true;
                 }
             });
