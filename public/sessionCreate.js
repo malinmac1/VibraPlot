@@ -18,6 +18,7 @@ onAuthStateChanged(auth, (user) => {
     if (user) {
         // User is signed in
         const uid = user.uid;
+        console.log("User signed in with UID:", uid);
 
         // Spawning buttons
         const main = document.getElementById('main');

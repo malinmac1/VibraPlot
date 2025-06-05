@@ -16,9 +16,9 @@ let index = 0;
 // Database functions
 function writeValueToDB(x, y, time, idx) {
     Promise.all([
-        set(ref(db, `values/${uid}/x/${idx}`), x),
-        set(ref(db, `values/${uid}/y/${idx}`), y),
-        set(ref(db, `values/${uid}/time/${idx}`), time)
+        set(ref(db, `/values/${uid}/x/${idx}`), x),
+        set(ref(db, `/values/${uid}/y/${idx}`), y),
+        set(ref(db, `/values/${uid}/time/${idx}`), time)
     ]).catch(err => {
         console.error(`Error writing values:`, err);
     });
@@ -33,6 +33,7 @@ function clearValuesInDB() {
 onAuthStateChanged(auth, (user) => {
     if (user) {
         uid = user.uid;
+        console.log("User signed in with UID:", uid);
         const video = document.getElementById('videoInput');
         function handleData() {
             // Function for writing initial values to the database
