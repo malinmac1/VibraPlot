@@ -62,6 +62,7 @@ onAuthStateChanged(auth, (user) => {
             });
 
         }
+        console.log(video.readyState);
         if (video.readyState >=2) {
             handleData();
         }
