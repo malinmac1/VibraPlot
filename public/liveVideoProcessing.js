@@ -1,6 +1,8 @@
 // Declaring x, y values for livePlotting.js
 let xValue = 0;
+let xValueInitial = 0;
 let yValue = 0;
+let yValueInitial = 0;
 let frequency = 0;
 
 // Declaring a button
@@ -39,8 +41,8 @@ Module.onRuntimeInitialized = function () {
             let widthValue = parseInt(width.value) / 100 * (canvas.width - leftValue);
             let bottomValue = canvas.height - (parseInt(bottom.value) / 100 * canvas.height);
             let heightValue = parseInt(height.value) / 100 * bottomValue;
-            let xValueInitial = leftValue + widthValue/2;
-            let yValueInitial = canvas.height - (bottomValue - heightValue/2);
+            xValueInitial = leftValue + widthValue/2;
+            yValueInitial = canvas.height - (bottomValue - heightValue/2);
             xValue = xValueInitial;
             yValue = yValueInitial;
 

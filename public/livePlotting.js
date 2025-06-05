@@ -64,10 +64,10 @@ let plotInterval;
 function drawPlots() {
     // Updating x, y and time values
     xAcceleration = (xValue - xValueOld) * frequency * frequency;
-    xDisplacement = xValue - xValueOld;
+    xDisplacement = xValue - xValueInitial;
     xValueOld = xValue;
     yAcceleration = (yValue - yValueOld) * frequency * frequency;
-    yDisplacement = yValue - yValueOld;
+    yDisplacement = yValue - yValueInitial;
     yValueOld = yValue;
     time += (1000 / frequency);
 

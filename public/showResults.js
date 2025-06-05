@@ -73,8 +73,8 @@ onAuthStateChanged(auth, (user) => {
                         // Preparing the data for plotting
                         for (let i = 1; i < x.length; i++) {
                             // Calculating the displacements
-                            xDisplacement[i] = x[i] - x[i - 1];
-                            yDisplacement[i] = y[i] - y[i - 1];
+                            xDisplacement[i] = x[i] - x[0];
+                            yDisplacement[i] = y[i] - y[0];
 
                             // Calculating the accelerations
                             xAcceleration[i] = (xDisplacement[i] - xDisplacement[i - 1]) / (time[i] - time[i - 1]);
