@@ -16,9 +16,9 @@ let index = 0;
 // Database functions
 function writeValueToDB(x, y, time, idx) {
     Promise.all([
-        set(ref(db, `/values/${uid}/x/${idx}`), x),
-        set(ref(db, `/values/${uid}/y/${idx}`), y),
-        set(ref(db, `/values/${uid}/time/${idx}`), time)
+        set(ref(db, 'values/' + uid + '/x/' + idx), x),
+        set(ref(db, 'values/' + uid + '/y/' + idx), y),
+        set(ref(db, 'values/' + uid + '/time/' + idx), time)
     ]).catch(err => {
         console.error(`Error writing values:`, err);
     });
