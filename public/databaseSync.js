@@ -36,6 +36,7 @@ onAuthStateChanged(auth, (user) => {
         console.log("User signed in with UID:", uid);
         const video = document.getElementById('videoInput');
         function handleData() {
+            console.log("Handling data for user:", uid);
             // Function for writing initial values to the database
             function writeInitialValues() {
                 clearValuesInDB();
