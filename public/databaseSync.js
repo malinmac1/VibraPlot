@@ -44,10 +44,9 @@ onAuthStateChanged(auth, (user) => {
                 console.log("Written initial values to the database: x: " + xValue + " y: " + yValue + " time: " + time);
             }
 
-            // Clear values on rectangle values change
-            ['left', 'width', 'bottom', 'height', 'frequency'].forEach(id => {
-                document.getElementById(id).addEventListener('change', writeInitialValues);
-            });
+            // Clear values on rectangle values and frequency change
+            document.addEventListener('rectangleChanged', writeInitialValues);
+            document.getElementById(frequency).addEventListener('change', writeInitialValues);
 
             // Check if the measurement has started
             document.addEventListener('measurementStarted', () => {

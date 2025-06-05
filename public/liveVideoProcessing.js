@@ -97,6 +97,7 @@ Module.onRuntimeInitialized = function () {
                 yValueInitial = canvas.height - (bottomValue - heightValue / 2);
                 startButton.innerHTML = 'Start';
                 drawInitialPlots();
+                document.dispatchEvent(new Event('rectangleChanged'));
             });
 
             // Capturing first frame of the video
