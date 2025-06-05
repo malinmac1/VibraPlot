@@ -15,9 +15,13 @@ let index = 0;
 
 // Database functions
 function writeValueToDB(x, y, time, idx) {
-    set(ref(db, `values/${uid}/x/${idx}`), x);
-    set(ref(db, `values/${uid}/y/${idx}`), y);
-    set(ref(db, `values/${uid}/time/${idx}`), time);
+    Promise.all([
+        set(ref(db, `values/${uid}/x/${idx}`), x),
+        set(ref(db, `values/${uid}/y/${idx}`), y),
+        set(ref(db, `values/${uid}/time/${idx}`), time)
+    ]).catch(err => {
+        console.error(`Error writing values at idx ${idx}:`, err);
+    });
 }
 
 function clearValuesInDB() {
