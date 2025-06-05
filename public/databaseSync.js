@@ -45,6 +45,7 @@ onAuthStateChanged(auth, (user) => {
                 writeValueToDB(xValue, yValue, time, 0);
                 console.log("Written initial values to the database: x: " + xValue + " y: " + yValue + " time: " + time);
             }
+            writeInitialValues();
 
             // Clear values on rectangle values and frequency change
             document.addEventListener('rectangleChanged', writeInitialValues);
