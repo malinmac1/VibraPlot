@@ -63,8 +63,10 @@ onAuthStateChanged(auth, (user) => {
 
         }
         console.log(video.readyState);
-        if (video.readyState >=2) {
-            handleData();
-        }
+        video.addEventListener('loadeddata', () => {
+            video.addEventListener('canplay', () => {
+                handleData();
+            });
+        });
     }
 });
