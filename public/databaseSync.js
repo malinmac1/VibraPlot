@@ -46,7 +46,7 @@ onAuthStateChanged(auth, (user) => {
 
             // Clear values on rectangle values and frequency change
             document.addEventListener('rectangleChanged', writeInitialValues);
-            document.getElementById(frequency).addEventListener('change', writeInitialValues);
+            document.getElementById('frequency').addEventListener('change', writeInitialValues);
 
             // Check if the measurement has started
             document.addEventListener('measurementStarted', () => {
