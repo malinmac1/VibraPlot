@@ -20,7 +20,7 @@ function writeValueToDB(x, y, time, idx) {
         set(ref(db, `values/${uid}/y/${idx}`), y),
         set(ref(db, `values/${uid}/time/${idx}`), time)
     ]).catch(err => {
-        console.error(`Error writing values at idx ${idx}:`, err);
+        console.error(`Error writing values:`, err);
     });
 }
 
