@@ -31,7 +31,7 @@
     <h1>VibraPlot</h1>
     <p>VibraPlot is a web app for vibration measurement based on devices camera feed, calculation of core variables and plotting them in real time. This app uses Firebase Realtime Database for storage of variables during a session. A session lasts 10 minutes from the first time loading this page. After the session ends all data is deleted from the database. To start a new session return to the home page. To reset the timer click the "Reset session" button.</p>
     <p>You can setup and start you measurement at the next page by clicking the "Next" button after the app connects to Firebase. Before starting a measurement adjust the rectangle that will follow your point to its size and position. You can change the position and size of the rectangle after a measuerement is started by stopping it with a "Stop" button before changing the values, but it will delete all previous values.</p>
-    <p>After that you can take a closer look at the generated plots or download them and a csv file of the measured displacements.</p>
+    <p>After that you can take a closer look at the generated plots or download them and a csv file of the measured x [px], y [px] and time [ms] values.</p>
     <script src="firebaseConfig.js" type="module"></script>
     <script src="sessionCreate.js" type="module"></script>
 </main>
