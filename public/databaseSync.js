@@ -14,9 +14,10 @@ let uid = null;
 let index = 0;
 
 // Database functions
-function writeValueToDB(x, y, idx) {
+function writeValueToDB(x, y, time, idx) {
     set(ref(db, `values/${uid}/x/${idx}`), x);
     set(ref(db, `values/${uid}/y/${idx}`), y);
+    set(ref(db, `values/${uid}/time/${idx}`), time);
 }
 
 function clearValuesInDB() {
@@ -27,16 +28,15 @@ function clearValuesInDB() {
 // Wait for authentication
 onAuthStateChanged(auth, (user) => {
     if (user) {
-        console.log("User is signed in with UID: " + user.uid);
         uid = user.uid;
         const video = document.getElementById('videoInput');
         function handleData() {
             // Function for writing initial values to the database
             function writeInitialValues() {
                 clearValuesInDB();
-                console.log("Values cleared in database on change of " + uid);
-                writeValueToDB(xValue, yValue, 0);
-                console.log("Values x: " + xValue + " and y: " + yValue + " written to database");
+                console.log("Clearing values in the database.");
+                writeValueToDB(xValue, yValue, time, 0);
+                console.log("Written initial values to the database: x: " + xValue + " y: " + yValue + " time: " + time);
             }
 
             // Clear values on rectangle values change
@@ -47,7 +47,7 @@ onAuthStateChanged(auth, (user) => {
             // Check if the measurement has started
             document.addEventListener('measurementStarted', () => {
                     // Start the interval for writing values to the database
-                    plotInterval = setInterval(() => {writeValueToDB(xValue, yValue, index); index++; console.log("Values x: " + xValue + " and y: " + yValue + " written to database");}, 1000 / frequency);
+                    plotInterval = setInterval(() => {writeValueToDB(xValue, yValue, time, index); index++; console.log("Written values to the database: x: " + xValue + " y: " + yValue + " time: " + time);}, 1000 / frequency);
             });
             document.addEventListener('measurementStopped', () => {
                 // Stop the interval

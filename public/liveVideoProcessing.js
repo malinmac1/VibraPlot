@@ -3,10 +3,6 @@ let xValue = 0;
 let yValue = 0;
 let frequency = 0;
 
-// Setting up starting for databaseSync.js
-const startButton = document.getElementById('startButton');
-let start = false;
-
 // Declaring a button
 let next = document.createElement('button');
 next.innerText = "Next";
@@ -19,8 +15,8 @@ Module.onRuntimeInitialized = function () {
     let streaming = false;
 
     // Starting processing after video is loaded
-    video.addEventListener('loadeddata', (event) => {
-        video.addEventListener('canplay', (event) => {
+    video.addEventListener('loadeddata', () => {
+        video.addEventListener('canplay', () => {
             streaming = true;
 
             // Assigning HTML elements to variables
@@ -30,6 +26,7 @@ Module.onRuntimeInitialized = function () {
             const bottom = document.getElementById('bottom');
             const height = document.getElementById('height');
             const frequencySelect = document.getElementById('frequency');
+            const startButton = document.getElementById('startButton');
 
             // Setting up initial x, y values
             canvas.width = video.width;
@@ -169,6 +166,7 @@ Module.onRuntimeInitialized = function () {
             document.getElementById('canvasOutput').dispatchEvent(new Event('loadeddata'));
 
             // Starting or stopping tracking and plotting
+            let start = false;
             startButton.onclick = function () {
                 if (!start) {
 
