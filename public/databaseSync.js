@@ -12,6 +12,7 @@ const auth = getAuth();
 const db = getDatabase(app);
 let uid = null;
 let index = 0;
+console.log("Connected to Firebase database.", db.app._options.databaseURL);
 
 // Database functions
 function writeValueToDB(x, y, time, idx) {
