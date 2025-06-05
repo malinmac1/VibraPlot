@@ -25,7 +25,7 @@ function writeValueToDB(x, y, time, idx) {
 }
 
 function clearValuesInDB() {
-    remove(ref(db, `values/${uid}`));
+    remove(ref(db, 'values/' + uid));
     index = 0;
 }
 
