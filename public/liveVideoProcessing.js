@@ -22,56 +22,82 @@ Module.onRuntimeInitialized = function () {
             streaming = true;
 
             // Assigning HTML elements to variables
-            const canvas = document.getElementById('canvasOutput');
-            const left = document.getElementById('left');
-            const width = document.getElementById('width');
-            const bottom = document.getElementById('bottom');
-            const height = document.getElementById('height');
+            const canvas = document.getElementById('canvasOutput')
             const frequencySelect = document.getElementById('frequency');
             const startButton = document.getElementById('startButton');
 
-            // Setting up initial x, y values
+            // Setting up initial position values
             canvas.width = video.width;
             canvas.height = video.height;
-            left.value = 0;
-            width.value = 100;
-            bottom.value = 0;
-            height.value = 100;
-            let leftValue = parseInt(left.value) / 100 * canvas.width;
-            let widthValue = parseInt(width.value) / 100 * (canvas.width - leftValue);
-            let bottomValue = canvas.height - (parseInt(bottom.value) / 100 * canvas.height);
-            let heightValue = parseInt(height.value) / 100 * bottomValue;
+            let leftValue = 0;
+            let widthValue = canvas.width;
+            let bottomValue = canvas.height;
+            let heightValue = canvas.height;
             xValueInitial = leftValue + widthValue/2;
             yValueInitial = canvas.height - (bottomValue - heightValue/2);
             xValue = xValueInitial;
             yValue = yValueInitial;
+            const rect = canvas.getBoundingClientRect();
+            let dragSide = null;
+            let dragOffset = {x: 0, y: 0};
 
             // Setting initial frequency
             frequencySelect.value = 30;
             frequency = parseInt(frequencySelect.value);
 
-            // Changing x, y values when input fields are changed
-            function widthChange() {
-                leftValue = parseInt(left.value) / 100 * canvas.width;
-                widthValue = parseInt(width.value) / 100 * (canvas.width - leftValue);
-                xValueInitial = leftValue + widthValue/2;
-                startButton.innerHTML = 'Start';
-                drawInitialPlots();
+            // Changing x, y values when window sides are moved
+            // Helper to detect which side is under the mouse
+            function getSideUnderMouse(x, y, rect, tolerance = 10) {
+                if (Math.abs(x - rect.x) < tolerance && y >= rect.y && y <= rect.y + rect.height) {
+                    return 'left';
+                }
+                if (Math.abs(x - (rect.x + rect.width)) < tolerance && y >= rect.y && y <= rect.y + rect.height) {
+                    return 'right';
+                }
+                if (Math.abs(y - rect.y) < tolerance && x >= rect.x && x <= rect.x + rect.width) {
+                    return 'top';
+                }
+                if (Math.abs(y - (rect.y + rect.height)) < tolerance && x >= rect.x && x <= rect.x + rect.width) {
+                    return 'bottom';
+                }
+                return null;
             }
 
-            function heightChange() {
-                bottomValue = canvas.height - (parseInt(bottom.value) / 100 * canvas.height);
-                heightValue = parseInt(height.value) / 100 * bottomValue;
+            // Mouse event handlers
+            canvas.addEventListener('mousedown', (e) => {
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+                dragSide = getSideUnderMouse(mouseX, mouseY, trackWindow);
+                dragOffset = {x: mouseX, y: mouseY};
+            });
+
+            canvas.addEventListener('mouseup', () => {
+                dragSide = null;
+            });
+
+            canvas.addEventListener('mousemove', (e) => {
+                if (!dragSide) return;
+                const mouseX = e.clientX - rect.left;
+                const mouseY = e.clientY - rect.top;
+                const dx = mouseX - dragOffset.x;
+                const dy = mouseY - dragOffset.y;
+                if (dragSide === 'left') {
+                    leftValue += dx;
+                    widthValue -= dx;
+                } else if (dragSide === 'right') {
+                    widthValue += dx;
+                } else if (dragSide === 'top') {
+                    heightValue -= dy;
+                } else if (dragSide === 'bottom') {
+                    bottomValue += dy;
+                    heightValue += dy;
+                }
+                dragOffset = {x: mouseX, y: mouseY};
+                xValueInitial = leftValue + widthValue/2;
                 yValueInitial = canvas.height - (bottomValue - heightValue / 2);
                 startButton.innerHTML = 'Start';
                 drawInitialPlots();
-            }
-
-            left.onchange = widthChange;
-            width.onchange = widthChange;
-
-            bottom.onchange = heightChange;
-            height.onchange = heightChange;
+            });
 
             // Capturing first frame of the video
             let cap = new cv.VideoCapture(video);
@@ -148,10 +174,6 @@ Module.onRuntimeInitialized = function () {
                     cv.imshow('canvasOutput', frame);
 
                     // Assigning new values to x, y
-                    left.value = x / canvas.width * 100;
-                    width.value = w / (canvas.width - x) * 100;
-                    bottom.value = (canvas.height - (y + h)) / canvas.height * 100;
-                    height.value = h / (y + h) * 100;
                     leftValue = x;
                     bottomValue = y + h;
                     xValue = (x + w/2) - xValueInitial;
