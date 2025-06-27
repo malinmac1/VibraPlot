@@ -20,4 +20,4 @@
 /public/favicon
 
 #Firebase configuration file
-/public/firebase-config.js
+/public/firebaseConfig.js
