@@ -1,11 +1,23 @@
 #WebStorm project folder
 /.idea
 
-#Local copies of library files
-/public/lib/
+#Files for Firebase hosting
+/firebase.json
+/.github
+/.firebase
+/.firebaserc
 
-#Cloud Functions
-/functions/
+#Local copies of library files
+/public/lib
 
 #Node.js dependencies
-/node_modules/
+/node_modules
+/package-lock.json
+/package.json
+
+#Files for PWA
+/public/site.webmanifest
+/public/favicon
+
+#Firebase configuration file
+/public/firebase-config.js
